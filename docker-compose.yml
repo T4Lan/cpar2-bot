@@ -1,0 +1,64 @@
+version: '2'
+
+services:
+
+
+    web:
+        image: registry.gitlab.com/molotec/docker-images/webserver
+        volumes:
+            - ./:/var/www
+        ports:
+            - "80:80"
+        links:
+            - app
+
+
+    app:
+        image: registry.gitlab.com/molotec/docker-images/app
+        volumes:
+            - ./:/var/www
+        environment:
+            - "DB_PORT=3306"
+            - "DB_HOST=database"
+        links:
+            - database
+
+
+    queue:
+        image: registry.gitlab.com/molotec/docker-images/workspace
+        volumes:
+            - ./:/var/www
+        command: php artisan queue:work --sleep=1 --tries=3
+        environment:
+            - "DB_PORT=3306"
+            - "DB_HOST=database"
+        links:
+            - database
+
+
+    workspace:
+        image: registry.gitlab.com/molotec/docker-images/workspace
+        volumes:
+            - ./:/var/www
+        environment:
+            - "DB_PORT=3306"
+            - "DB_HOST=data base"
+        links:
+            - database
+        tty: true
+
+
+    database:
+        image: mysql:5.7
+        volumes:
+            - dbdata:/var/lib/mysql
+        environment:
+            - "MYSQL_DATABASE=homestead"
+            - "MYSQL_USER=homestead"
+            - "MYSQL_PASSWORD=secret"
+            - "MYSQL_ROOT_PASSWORD=secret"
+        ports:
+            - "33061:3306"
+
+volumes:
+    dbdata:
