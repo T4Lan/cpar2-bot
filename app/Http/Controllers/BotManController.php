@@ -8,12 +8,13 @@ use App\Conversations\ExampleConversation;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\BotMan\Messages\Attachments\Audio;
 
 class BotManController extends Controller
 {
-
-    public $earthEmoji = "\u{1F30F}";
-    private $grinningFace = "\u{1F601}";
+    // emoji codes consts
+    const EARTH = "\u{1F30F}";
+    const GRINNING_FACE = "\u{1F601}";
     
     /**
      * Place your BotMan logic here.
@@ -47,7 +48,7 @@ class BotManController extends Controller
         // Make bot more human like
         $bot->typesAndWaits(2);
 
-        $bot->reply('Esta es la dirección de Tecnópolis ' . $this->earthEmoji .$this->grinningFace);
+        $bot->reply('Esta es la dirección de Tecnópolis ' . self::EARTH . self::GRINNING_FACE);
 
         // Create attachment
         $attachment = new Location(-34.5614827695827, -58.50762742329734, [
@@ -56,6 +57,21 @@ class BotManController extends Controller
         
         // Build message object
         $message = OutgoingMessage::create()
+                    ->withAttachment($attachment);
+        
+        // Reply message object
+        $bot->reply($message);
+    }
+
+    public function sendLanPartyAudio(BotMan $bot)
+    {
+        // Create attachment
+        $attachment = new Audio(url('/audio/no-lei-nada-sale-lan-party.ogg'), [
+            'custom_payload' => true,
+        ]);
+        
+        // Build message object
+        $message = OutgoingMessage::create('SALE LAN PARTY!!')
                     ->withAttachment($attachment);
         
         // Reply message object

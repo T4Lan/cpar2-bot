@@ -21,3 +21,5 @@ $botman->hears('/greet {text}', function($bot, $text){
 
 // commands
 $botman->hears('/mapa',  BotManController::class.'@sendLocation');
+
+$botman->hears('/lanparty', BotManController::class.'@sendLanPartyAudio');
