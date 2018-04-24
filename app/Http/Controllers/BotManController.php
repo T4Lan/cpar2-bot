@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\EmojiCodes;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
 use App\Conversations\ExampleConversation;
@@ -12,9 +13,6 @@ use BotMan\BotMan\Messages\Attachments\Audio;
 
 class BotManController extends Controller
 {
-    // emoji codes consts
-    const EARTH = "\u{1F30F}";
-    const GRINNING_FACE = "\u{1F601}";
     
     /**
      * Place your BotMan logic here.
@@ -48,7 +46,7 @@ class BotManController extends Controller
         // Make bot more human like
         $bot->typesAndWaits(2);
 
-        $bot->reply('Esta es la dirección de Tecnópolis ' . self::EARTH . self::GRINNING_FACE);
+        $bot->reply('Esta es la dirección de Tecnópolis ' . EmojiCodes::EARTH . EmojiCodes::GRINNING_FACE);
 
         // Create attachment
         $attachment = new Location(-34.5614827695827, -58.50762742329734, [
