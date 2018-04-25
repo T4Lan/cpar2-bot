@@ -28,19 +28,15 @@ DEPLOY_DIR="cpar2-bot"
 
 # send every file to server
 ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "mkdir $DEPLOY_DIR"
-# rsync -a -e "ssh -p $SERVER_PORT" "$PWD" "$SERVER_USERNAME@$SERVER_HOST:~/" --exclude=".git" --exclude="deploy/" --exclude="storage/"
+rsync -a -e "ssh -p $SERVER_PORT" "$PWD" "$SERVER_USERNAME@$SERVER_HOST:~/" --exclude=".git" --exclude="deploy/" --exclude="storage/"
 # ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ln -s $DEPLOY_DIR/public public_html"
 
 echo "-- Remote Work --"
 
-# ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ls -la"
-# ssh -T -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
+ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ls -la $DEPLOY_DIR"
+# ssh -tt -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
 #  cd $DEPLOY_DIR
-#  php composer install
-#  php composer dump -o
-#  php artisan config:cache
-#  php artisan key:generate
-#  php artisan migrate
+#  docker ps
 # EOF
 
 echo "-- Deploy Ended --"
