@@ -42,7 +42,7 @@ services:
             - ./:/var/www
         environment:
             - "DB_PORT=3306"
-            - "DB_HOST=data base"
+            - "DB_HOST=database"
         links:
             - database
         tty: true

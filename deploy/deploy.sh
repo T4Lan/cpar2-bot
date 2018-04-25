@@ -26,7 +26,7 @@ DEPLOY_DIR="cpar2-bot"
 
 echo "-- Remote Work Previous to Upload--"
 
-ssh -T -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
+ssh -t -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
   cd $DEPLOY_DIR
   docker-compose down
   exit
@@ -42,12 +42,14 @@ rsync -a -e "ssh -p $SERVER_PORT" "$PWD" "$SERVER_USERNAME@$SERVER_HOST:~/" --ex
 echo "-- Remote Work Post Upload--"
 
 # ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ls -la $DEPLOY_DIR"
-ssh -T -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
+ssh -t -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
  cd $DEPLOY_DIR
  cp .env.prod .env
  docker-compose up -d
  docker-compose exec workspace composer install
+ docker-compose exec workspace php artisan config:clear
  docker-compose exec workspace php artisan key:generate
+ docker-compose exec workspace php artisan migrate
  exit
 EOF
 
