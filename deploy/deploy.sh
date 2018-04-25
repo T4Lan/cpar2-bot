@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 
 # Defined Variables
 # $SERVER_HOST
@@ -21,22 +21,32 @@ echo "-- Local Work --"
 # envsubst < .env.prod > .env
 # cat .env
 
-echo "-- Upload to Remote --"
-
 # path to upload to dir
 DEPLOY_DIR="cpar2-bot"
 
+echo "-- Remote Work Previous to Upload--"
+
+ssh -tt -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
+  cd $DEPLOY_DIR
+  docker-compose down
+EOF
+
+echo "-- Upload to Remote --"
+
 # send every file to server
-ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "mkdir $DEPLOY_DIR"
+# ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "mkdir $DEPLOY_DIR"
 rsync -a -e "ssh -p $SERVER_PORT" "$PWD" "$SERVER_USERNAME@$SERVER_HOST:~/" --exclude=".git" --exclude="deploy/" --exclude="storage/"
 # ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ln -s $DEPLOY_DIR/public public_html"
 
-echo "-- Remote Work --"
+echo "-- Remote Work Post Upload--"
 
-ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ls -la $DEPLOY_DIR"
-# ssh -tt -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
-#  cd $DEPLOY_DIR
-#  docker ps
-# EOF
+# ssh -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST "ls -la $DEPLOY_DIR"
+ssh -tt -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
+ cd $DEPLOY_DIR
+ cp .env.prod .env
+ docker-compose up -d
+ docker-compose exec workspace "composer install"
+ docker-compose exec workspace "php artisan key generate"
+EOF
 
 echo "-- Deploy Ended --"
