@@ -1,0 +1,35 @@
+language: php
+php:
+  - '7.2'
+
+notifications:
+  email: false
+
+cache:
+  directories:
+    - vendor
+    # - node_modules
+
+# before_install:
+  # this decrypt the private key used to connect to deploy server
+  # - openssl aes-256-cbc -K $encrypted_0c5ce02c3461_key -iv $encrypted_0c5ce02c3461_iv -in deploy/molotec.enc -out deploy/molotec -d
+
+install:
+  # adds server key to known hosts, and test connection
+  - echo $SERVER_KEY >> $HOME/.ssh/known_hosts
+
+before_script:
+  - composer install
+  # - npm install
+
+script:
+  - php artisan -v
+  # - npm run production
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: deploy/deploy.sh
+  on:
+    all_branches: true
+    # branch: master
