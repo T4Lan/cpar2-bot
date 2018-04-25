@@ -46,10 +46,10 @@ ssh -t -p $SERVER_PORT $SERVER_USERNAME@$SERVER_HOST <<EOF
  cd $DEPLOY_DIR
  cp .env.prod .env
  docker-compose up -d
- docker-compose exec workspace composer install
- docker-compose exec workspace php artisan config:clear
- docker-compose exec workspace php artisan key:generate
- docker-compose exec workspace php artisan migrate
+ docker-compose exec -T workspace composer install
+ docker-compose exec -T workspace php artisan config:clear
+ docker-compose exec -T workspace php artisan key:generate
+ docker-compose exec -T workspace php artisan migrate --force
  exit
 EOF
 
