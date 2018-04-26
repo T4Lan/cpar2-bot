@@ -10,6 +10,7 @@ use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 use BotMan\BotMan\Messages\Attachments\Audio;
+use App\Conversations\ScheduleConversation;
 
 class BotManController extends Controller
 {
@@ -75,4 +76,10 @@ class BotManController extends Controller
         // Reply message object
         $bot->reply($message);
     }
+
+    public function startScheduleConversation(BotMan $bot)
+    {
+        $bot->startConversation(new ScheduleConversation());
+    }
+
 }
