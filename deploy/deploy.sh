@@ -19,6 +19,8 @@ echo "-- Local Work --"
 
 # generates prod env config
 # envsubst < .env.prod > .env
+echo "TELEGRAM_TOKEN=$TELEGRAM_TOKEN" >> .env.prod
+echo "" >> .env.prod
 # cat .env
 
 # path to upload to dir
